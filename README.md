@@ -1,5 +1,6 @@
 # NBAData
-Comprehensive data retrieval of all players NBA.
+Created 9/14/18.
 
-Test change
-Test change from Eclipse
+NBAData is an NBA-based web scraper/data parser, prioritizing the individual player, team statistics, and advanced analytics.
+
+All data taken from Basketball Reference.
