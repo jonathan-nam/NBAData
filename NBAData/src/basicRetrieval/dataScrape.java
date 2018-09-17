@@ -23,9 +23,7 @@ public class dataScrape {
 		
 		/* Start */
 		Document connection = Jsoup.connect(url).get();
-		Element refinedDoc = connection.body();
-		System.out.println(refinedDoc.toString());
-			
+		Element refinedDoc = connection.body();	
 		Elements teamNames = refinedDoc.select(teamSelector);	
 		
 		/* initialize list of teams */
@@ -38,6 +36,7 @@ public class dataScrape {
 			teams.add(count, team);
 			count++;
 		}
+	
 		System.out.println(teams);
 	}
 }
