@@ -7,15 +7,15 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
 import org.jsoup.select.Elements;
 
-public class dataScrape {
-	private static String url = "https://www.basketball-reference.com/teams/";
+public class League {
+	private static String teamsUrl = "https://www.basketball-reference.com/teams/";
 	private static String playersUrl = "https://www.basketball-reference.com/leagues/NBA_2019_per_game.html";
 	private static ArrayList <Team> allTeams = new ArrayList<Team>();
 	private static ArrayList <Player> allPlayers = new ArrayList<Player>();
 	
 	public static void main (String [] args) throws IOException {
 		initPlayers();
-		//initTeams();
+		initTeams();
 	}
 	
 	private static void initPlayers() throws IOException{
@@ -26,7 +26,7 @@ public class dataScrape {
 		String ageSel = 
 				"#per_game_stats > tbody > tr.full_table > td[data-stat=age]";
 		String teamSel = 
-				"#per_game_stats > tbody > tr.full_table > td[data-stat=team_id] > a";
+				"#per_game_stats > tbody > tr.full_table > td[data-stat=team_id]";
 		String gPSel = 
 				"#per_game_stats > tbody > tr.full_table > td[data-stat=g]";
 		String gSSel = 
@@ -111,13 +111,52 @@ public class dataScrape {
 		Elements pFs = refinedDoc.select(pFSel);
 		Elements PPGs = refinedDoc.select(PPGSel);
 		
-		System.out.println("Player size: " + names.size());
-		System.out.println("Position size: " + positions.size());
-		System.out.println("Age size: " + ages.size());
-		System.out.println("Teams size: " + teams.size());
-		System.out.println("Number of players with PPG: " + PPGs.size());
+//		System.out.println("Player size: " + names.size());
+//		System.out.println("Position size: " + positions.size());
+//		System.out.println("Age size: " + ages.size());
+//		System.out.println("Teams size: " + teams.size());
+//		System.out.println("Games size: " + gs.size());
+//		System.out.println("3PT% size: " + threePPcts.size());
+//		System.out.println("Number of players with PPG: " + PPGs.size());
+//		System.out.println("Steven Adam's 3PT%: " + threePPcts.get(2).text());
 		
 		for (int i = 0; i < names.size(); i++) {
+			Float fGPct;
+			Float threePPct;
+			Float twoPPct;
+			Float eFGPct;
+			Float fTPct;
+			
+			if (fGPcts.get(i).text().equals("")) {
+				fGPct = -1.0f;
+			} else {
+				fGPct = Float.parseFloat(fGPcts.get(i).text());
+			}
+			
+			if (threePPcts.get(i).text().equals("")) {
+				threePPct = -1.0f;
+			} else {
+				threePPct = Float.parseFloat(threePPcts.get(i).text());
+			}
+			
+			if (twoPPcts.get(i).text().equals("")) {
+				twoPPct = -1.0f;
+			} else {
+				twoPPct = Float.parseFloat(twoPPcts.get(i).text());
+			}
+			
+			if (eFGPcts.get(i).text().equals("")) {
+				eFGPct = -1.0f;
+			} else {
+				eFGPct = Float.parseFloat(eFGPcts.get(i).text());
+			}
+			
+			if (fTPcts.get(i).text().equals("")) {
+				fTPct = -1.0f;
+			} else {
+				fTPct = Float.parseFloat(fTPcts.get(i).text());
+			}
+			
 			allPlayers.add(new Player(
 					names.get(i).text(), 
 					positions.get(i).text(), 
@@ -128,17 +167,17 @@ public class dataScrape {
 					Float.parseFloat(mPs.get(i).text()), 
 					Float.parseFloat(fGs.get(i).text()), 
 					Float.parseFloat(fGAs.get(i).text()), 
-					Float.parseFloat(fGPcts.get(i).text()), 
+					fGPct, 
 					Float.parseFloat(threePs.get(i).text()), 
 					Float.parseFloat(threePAs.get(i).text()), 
-					Float.parseFloat(threePPcts.get(i).text()), 
+					threePPct, 
 					Float.parseFloat(twoPs.get(i).text()),
 					Float.parseFloat(twoPAs.get(i).text()), 
-					Float.parseFloat(twoPPcts.get(i).text()), 
-					Float.parseFloat(eFGPcts.get(i).text()), 
+					twoPPct, 
+					eFGPct, 
 					Float.parseFloat(fTs.get(i).text()),
 					Float.parseFloat(fTAs.get(i).text()),
-					Float.parseFloat(fTPcts.get(i).text()), 
+					fTPct, 
 					Float.parseFloat(oRBs.get(i).text()),
 					Float.parseFloat(dRBs.get(i).text()), 
 					Float.parseFloat(tRBs.get(i).text()), 
@@ -148,6 +187,7 @@ public class dataScrape {
 					Float.parseFloat(tOVs.get(i).text()), 
 					Float.parseFloat(pFs.get(i).text()), 
 					Float.parseFloat(PPGs.get(i).text())));
+//			System.out.println("Player " + i + "added!");
 		}	   
 	}
 	
@@ -156,9 +196,19 @@ public class dataScrape {
 				"div[id=all_teams_active] [data-stat^=franch_name] > a[href^=/teams/]";
 		
 		/* Start */
-		Document connection = Jsoup.connect(url).get();
+		Document connection = Jsoup.connect(teamsUrl).get();
 		Element refinedDoc = connection.body();	
 		Elements teamNames = refinedDoc.select(teamSelector);	
 		
+		for (Element team: teamNames) {
+			String teamLink = team.absUrl("href") + "2019.html";
+//			System.out.println(teamLink);
+//			System.out.println(team.text());
+			allTeams.add(new Team(teamLink, team.text(), allPlayers));			
+		}
+		
+		for (Team t: allTeams) {
+			System.out.println(t);
+		}
 	}
 }

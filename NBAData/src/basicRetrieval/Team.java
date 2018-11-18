@@ -9,33 +9,25 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 public class Team {
-	private static final int NUM_PLAYERS = 15;
-	private String name;
-	private ArrayList <Player> players = new ArrayList <Player>(NUM_PLAYERS);
+	private String teamName;
+	private ArrayList <Player> players = new ArrayList <Player>();
 	private String teamLink;
 	
-	public Team (String teamLink, String name) throws IOException {
+	public Team (String teamLink, String teamName, ArrayList<Player> allPlayers) throws IOException {
 		this.teamLink = teamLink;
-		this.name = name;
-		initTeam();
+		this.teamName = teamName;
+		initTeam(allPlayers);
 	}
 	
 	public String getName() {
-		return name;
-	}
-	public void setName(String name) {
-		this.name = name;
+		return teamName;
 	}
 	
 	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 	
-	public void setPlayers(ArrayList<Player> players) {
-		this.players = players;
-	}
-	
-	public void initTeam() throws IOException {	
+	public void initTeam(ArrayList<Player> allPlayers) throws IOException {	
 		/* These team links are not correctly updated on Basketball Reference. */
 		if (teamLink.equals("https://www.basketball-reference.com/teams/NJN/2019.html")) {
 			this.teamLink = ("https://www.basketball-reference.com/teams/BRK/2019.html");
@@ -45,13 +37,15 @@ public class Team {
 			this.teamLink = ("https://www.basketball-reference.com/teams/NOP/2019.html");
 		}
 	
-		Document teamConn = Jsoup.connect(teamLink).ignoreHttpErrors(true).get();
-		System.out.println(teamConn.text().toString());
-		Elements playerNames = teamConn.select
-				("div[id=all_roster]  tr [data-stat^=player] > a[href^=/players/]");
+//		Document teamConn = Jsoup.connect(teamLink).ignoreHttpErrors(true).get();
+//		System.out.println(teamConn.text().toString());
+//		Elements names = teamConn.select
+//				("div[id=all_roster]  tr [data-stat^=player] > a[href^=/players/]");
 		
-		for (Element player : playerNames) {
-			players.add(new Player(player.text()));
+		for (int i = 0; i < allPlayers.size(); i++) {
+			if (allPlayers.get(i).getTeam().equals(teamName)) {
+				players.add(allPlayers.get(i));
+			}
 		}	
 	}
 	
@@ -66,9 +60,6 @@ public class Team {
 	}
 	
 	public String toString() {
-		return "\nName: " + name + "\nURL: " + teamLink + "\n" + printPlayers(); 
+		return "\nName: " + teamName + "\nURL: " + teamLink + "\n" + printPlayers(); 
 	}
-	
-	//*[@id="per_game_stats"]/tbody/tr[3]/td[1]
-	//#per_game_stats > tbody > tr:nth-child(3) > td:nth-child(2)
 }

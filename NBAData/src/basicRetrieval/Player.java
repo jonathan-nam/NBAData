@@ -39,7 +39,6 @@ public class Player {
 	private float tOV;
 	private float persFouls;
 	
-	
 	public Player(String name, String pos, int age, String team, int games, int gamesStarted, float minPlayed, float fGGame,
 			float fGAttempted, float fGPercent, float threePtrsGame, float threePtrsAtt, float threePtrsPct,
 			float twoPtrsGame, float twoPtrsAtt, float twoPtrsPct, float eFG, float fTGame, float fTAtt, float fTPct,
@@ -47,7 +46,103 @@ public class Player {
 		this.name = name;
 		this.pos = pos;
 		this.age = age;
-		this.team = team;
+		
+		switch (team)
+		{
+			case "ATL":
+				this.team = "Atlanta Hawks";
+				break;
+			case "BOS":
+				this.team = "Boston Celtics";
+				break;
+			case "BRK":
+				this.team = "Brooklyn Nets";
+				break;
+			case "CHI":
+				this.team = "Chicago Bulls";
+				break;
+			case "CHO":
+				this.team = "Charlotte Hornets";
+				break;
+			case "CLE":
+				this.team = "Cleveland Cavaliers";
+				break;
+			case "DAL":
+				this.team = "Dallas Mavericks";
+				break;
+			case "DEN":
+				this.team = "Denver Nuggets";
+				break;
+			case "DET":
+				this.team = "Detroit Pistons";
+				break;
+			case "GSW":
+				this.team = "Golden State Warriors";
+				break;
+			case "HOU":
+				this.team = "Houston Rockets";
+				break;
+			case "IND":
+				this.team = "Indiana Pacers";
+				break;
+			case "LAC":
+				this.team = "Los Angeles Clippers";
+				break;
+			case "LAL":
+				this.team = "Los Angeles Lakers";
+				break;
+			case "MEM":
+				this.team = "Memphis Grizzlies";
+				break;
+			case "MIA":
+				this.team = "Miami Heat";
+				break;
+			case "MIL":
+				this.team = "Milwaukee Bucks";
+				break;
+			case "MIN":
+				this.team = "Minnesota Timberwolves";
+				break;
+			case "NOP":
+				this.team = "New Orleans Pelicans";
+				break;
+			case "NYK":
+				this.team = "New York Knicks";
+				break;
+			case "OKC":
+				this.team = "Oklahoma City Thunder";
+				break;
+			case "ORL":
+				this.team = "Orlando Magic";
+				break;
+			case "PHI":
+				this.team = "Philadelphia 76ers";
+				break;
+			case "PHO":
+				this.team = "Phoenix Suns";
+				break;
+			case "POR":
+				this.team = "Portland Trail Blazers";
+				break;
+			case "SAC":
+				this.team = "Sacramento Kings";
+				break;
+			case "SAS":
+				this.team = "San Antonio Spurs";
+				break;
+			case "TOR":
+				this.team = "Toronto Raptors";
+				break;
+			case "UTA":
+				this.team = "Utah Jazz";
+				break;
+			case "WAS":
+				this.team = "Washington Wizards";
+				break;
+			default:
+				this.team = "No team";
+		}
+		
 		this.games = games;
 		this.gamesStarted = gamesStarted;
 		this.minPlayed = minPlayed;
@@ -191,7 +286,28 @@ public class Player {
 		return PPG;
 	}
 	
+	@Override
 	public String toString() {
-		return name;
+		return "Player [name=" + name + ", pos=" + pos + ", age=" + age + ", team=" + team + ", games=" + games
+				+ ", gamesStarted=" + gamesStarted + ", minPlayed=" + minPlayed + ", fGGame=" + fGGame
+				+ ", fGAttempted=" + fGAttempted + ", fGPercent=" + fGPercent + ", threePtrsGame=" + threePtrsGame
+				+ ", threePtrsAtt=" + threePtrsAtt + ", threePtrsPct=" + threePtrsPct + ", twoPtrsGame=" + twoPtrsGame
+				+ ", twoPtrsAtt=" + twoPtrsAtt + ", twoPtrsPct=" + twoPtrsPct + ", eFG=" + eFG + ", fTGame=" + fTGame
+				+ ", fTAtt=" + fTAtt + ", fTPct=" + fTPct + ", oRB=" + oRB + ", dRB=" + dRB + ", PPG=" + PPG + ", tRB="
+				+ tRB + ", aST=" + aST + ", sTL=" + sTL + ", bLK=" + bLK + ", tOV=" + tOV + ", persFouls=" + persFouls
+				+ "]";
+	}
+	
+	public boolean equals (Object o) {
+		boolean isEqual = false;
+		
+		if (o instanceof Player) {
+			Player temp = (Player) o;
+			if (temp.getName().equals(this.getName())) {
+				isEqual = true;
+			}
+		}
+		
+		return isEqual;
 	}
 }
