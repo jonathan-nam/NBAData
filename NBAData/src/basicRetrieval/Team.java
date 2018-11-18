@@ -11,7 +11,7 @@ import org.jsoup.select.Elements;
 public class Team {
 	private static final int NUM_PLAYERS = 15;
 	private String name;
-	private ArrayList <String> players = new ArrayList <String>(NUM_PLAYERS);
+	private ArrayList <Player> players = new ArrayList <Player>(NUM_PLAYERS);
 	private String teamLink;
 	
 	public Team (String teamLink, String name) throws IOException {
@@ -27,11 +27,11 @@ public class Team {
 		this.name = name;
 	}
 	
-	public ArrayList<String> getPlayers() {
+	public ArrayList<Player> getPlayers() {
 		return players;
 	}
 	
-	public void setPlayers(ArrayList<String> players) {
+	public void setPlayers(ArrayList<Player> players) {
 		this.players = players;
 	}
 	
@@ -51,7 +51,7 @@ public class Team {
 				("div[id=all_roster]  tr [data-stat^=player] > a[href^=/players/]");
 		
 		for (Element player : playerNames) {
-			players.add(player.text());
+			players.add(new Player(player.text()));
 		}	
 	}
 	
@@ -68,4 +68,7 @@ public class Team {
 	public String toString() {
 		return "\nName: " + name + "\nURL: " + teamLink + "\n" + printPlayers(); 
 	}
+	
+	//*[@id="per_game_stats"]/tbody/tr[3]/td[1]
+	//#per_game_stats > tbody > tr:nth-child(3) > td:nth-child(2)
 }
