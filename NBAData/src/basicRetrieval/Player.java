@@ -1,5 +1,7 @@
 package basicRetrieval;
 
+import java.util.Comparator;
+
 public class Player {
 	/* General information */
 	private String name;
@@ -39,10 +41,13 @@ public class Player {
 	private float tOV;
 	private float persFouls;
 	
+	private String photoLink;
+	
 	public Player(String name, String pos, int age, String team, int games, int gamesStarted, float minPlayed, float fGGame,
 			float fGAttempted, float fGPercent, float threePtrsGame, float threePtrsAtt, float threePtrsPct,
 			float twoPtrsGame, float twoPtrsAtt, float twoPtrsPct, float eFG, float fTGame, float fTAtt, float fTPct,
-			float oRB, float dRB, float tRB, float aST, float sTL, float bLK, float tOV, float persFouls, float PPG) {
+			float oRB, float dRB, float tRB, float aST, float sTL, float bLK, float tOV, float persFouls, float PPG,
+			String photoLink) {
 		this.name = name;
 		this.pos = pos;
 		this.age = age;
@@ -168,6 +173,7 @@ public class Player {
 		this.tOV = tOV;
 		this.persFouls = persFouls;
 		this.PPG = PPG;
+		this.photoLink = photoLink;
 	}
 	
 	public String getName() {
@@ -286,6 +292,10 @@ public class Player {
 		return PPG;
 	}
 	
+	public String getPhotoLink() {
+		return photoLink;
+	}
+	
 	@Override
 	public String toString() {
 		return "Player [name=" + name + ", pos=" + pos + ", age=" + age + ", team=" + team + ", games=" + games
@@ -309,5 +319,74 @@ public class Player {
 		}
 		
 		return isEqual;
+	}
+}
+
+/*
+ * Sort by points per game in descending order.
+ */
+class SortByPPG implements Comparator<Player> {
+	public int compare(Player a, Player b) {
+		if (b.getPPG() - a.getPPG() > 0) {
+			return 1;
+		} else if (b.getPPG() - a.getPPG() < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+}
+
+/*
+ * Sort by rebounds per game in descending order.
+ */
+class SortByREB implements Comparator<Player> {
+	public int compare (Player a, Player b) {
+		if (b.gettRB() - a.gettRB() > 0) {
+			return 1;
+		} else if (b.gettRB() - a.gettRB() < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+}
+
+/*
+ * Sort by assists per game in descending order.
+ */
+class SortByAST implements Comparator<Player> {
+	public int compare (Player a, Player b) {
+		if (b.getaST() - a.getaST() > 0) {
+			return 1;
+		} else if (b.getaST() - a.getaST() < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+}
+
+class SortBySTL implements Comparator<Player> {
+	public int compare (Player a, Player b) {
+		if (b.getsTL() - a.getsTL() > 0) {
+			return 1;
+		} else if (b.getsTL() - a.getsTL() < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
+	}
+}
+
+class SortByBLK implements Comparator<Player> {
+	public int compare (Player a, Player b) {
+		if (b.getbLK() - a.getbLK() > 0) {
+			return 1;
+		} else if (b.getbLK() - a.getbLK() < 0) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 }

@@ -2,6 +2,7 @@ package basicRetrieval;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.*;
@@ -16,8 +17,18 @@ public class League {
 	public static void main (String [] args) throws IOException {
 		initPlayers();
 		initTeams();
+		
+		// Collections.sort operates as a modified merge sort, O(nlogn)
+//		Collections.sort(allPlayers, new SortByPPG());
+//		for (int i = 0; i < allPlayers.size(); i++) {
+//			System.out.print(allPlayers.get(i).getName() + ": " + 
+//							allPlayers.get(i).getPPG() + "\n");
+//		}
 	}
 	
+	/*
+	 * Initializes per-game statistics of all players for the current year
+	 */
 	private static void initPlayers() throws IOException{
 		String nameSel = 
 				"#per_game_stats > tbody > tr.full_table > td[data-stat^=player]";
@@ -76,7 +87,10 @@ public class League {
 		String pFSel = 
 				"#per_game_stats > tbody > tr.full_table > td[data-stat=pf_per_g]";
 		String PPGSel = 
-				"#per_game_stats > tbody > tr.full_table > td[data-stat=pts_per_g]";		
+				"#per_game_stats > tbody > tr.full_table > td[data-stat=pts_per_g]";	
+		String pageSel = 
+				"#per_game_stats > tbody > tr.full_table > td[data-stat=player] > a[href^=/players/]";
+		
 		
 		Document connection = Jsoup.connect(playersUrl).get();
 		Element refinedDoc = connection.body();
@@ -110,15 +124,7 @@ public class League {
 		Elements tOVs = refinedDoc.select(tOVSel);
 		Elements pFs = refinedDoc.select(pFSel);
 		Elements PPGs = refinedDoc.select(PPGSel);
-		
-//		System.out.println("Player size: " + names.size());
-//		System.out.println("Position size: " + positions.size());
-//		System.out.println("Age size: " + ages.size());
-//		System.out.println("Teams size: " + teams.size());
-//		System.out.println("Games size: " + gs.size());
-//		System.out.println("3PT% size: " + threePPcts.size());
-//		System.out.println("Number of players with PPG: " + PPGs.size());
-//		System.out.println("Steven Adam's 3PT%: " + threePPcts.get(2).text());
+		Elements pages = refinedDoc.select(pageSel);
 		
 		for (int i = 0; i < names.size(); i++) {
 			Float fGPct;
@@ -127,6 +133,7 @@ public class League {
 			Float eFGPct;
 			Float fTPct;
 			
+			/**Players who have no data in % categories get -1 place holders**/
 			if (fGPcts.get(i).text().equals("")) {
 				fGPct = -1.0f;
 			} else {
@@ -156,6 +163,16 @@ public class League {
 			} else {
 				fTPct = Float.parseFloat(fTPcts.get(i).text());
 			}
+			/************************************************************/
+			
+			/***********Image Retrieval*************/
+			String playerLink = pages.get(i).absUrl("href");
+			Document photoConn = Jsoup.connect(playerLink).get();
+			Element refinedDoc2 = photoConn.body();
+			String imageSel = 
+					"#meta > div.media-item > img";		
+			String photoLink = refinedDoc2.selectFirst(imageSel).absUrl("src"); 
+			/****************************************/
 			
 			allPlayers.add(new Player(
 					names.get(i).text(), 
@@ -186,8 +203,8 @@ public class League {
 					Float.parseFloat(bLKs.get(i).text()), 
 					Float.parseFloat(tOVs.get(i).text()), 
 					Float.parseFloat(pFs.get(i).text()), 
-					Float.parseFloat(PPGs.get(i).text())));
-//			System.out.println("Player " + i + "added!");
+					Float.parseFloat(PPGs.get(i).text()),
+					photoLink));
 		}	   
 	}
 	
@@ -202,13 +219,11 @@ public class League {
 		
 		for (Element team: teamNames) {
 			String teamLink = team.absUrl("href") + "2019.html";
-//			System.out.println(teamLink);
-//			System.out.println(team.text());
 			allTeams.add(new Team(teamLink, team.text(), allPlayers));			
 		}
 		
-		for (Team t: allTeams) {
-			System.out.println(t);
-		}
+//		for (Team t: allTeams) {
+//			System.out.println(t);
+//		}
 	}
 }
